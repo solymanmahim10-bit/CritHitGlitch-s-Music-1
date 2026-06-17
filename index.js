@@ -149,4 +149,4 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-client.login(process.MTUxNjc1NDM4NTY1MTM3MjA1Mg.GeM3Fj.ZTdOzwdLBaJYpqwBxBhJtWmmLC4hFDaZdInIUM);
+client.login( MTUxNjc1NDM4NTY1MTM3MjA1Mg.GeM3Fj.ZTdOzwdLBaJYpqwBxBhJtWmmLC4hFDaZdInIUM);
