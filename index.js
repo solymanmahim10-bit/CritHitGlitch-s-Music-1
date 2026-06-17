@@ -1,15 +1,13 @@
 const {
   Client,
-  GatewayIntentBits,
-  Collection
+  GatewayIntentBits
 } = require("discord.js");
 
 const {
   joinVoiceChannel,
   createAudioPlayer,
   createAudioResource,
-  AudioPlayerStatus,
-  getVoiceConnection
+  AudioPlayerStatus
 } = require("@discordjs/voice");
 
 const play = require("play-dl");
@@ -32,19 +30,21 @@ client.once("ready", () => {
 });
 
 async function playSong(guild, song) {
-  const serverQueue = client.queue.get(guild.id);
+  const queue = client.queue.get(guild.id);
+
   if (!song) {
-    serverQueue.connection.destroy();
+    queue.connection.destroy();
     client.queue.delete(guild.id);
     return;
   }
 
   const stream = await play.stream(song.url);
+
   const resource = createAudioResource(stream.stream, {
     inputType: stream.type
   });
 
-  serverQueue.player.play(resource);
+  queue.player.play(resource);
 }
 
 client.on("messageCreate", async (message) => {
@@ -52,7 +52,7 @@ client.on("messageCreate", async (message) => {
 
   const args = message.content.split(" ");
 
-  // 🎧 PLAY COMMAND
+  // 🎧 PLAY
   if (message.content.startsWith("!play")) {
     const query = args.slice(1).join(" ");
     if (!query) return message.reply("❌ Give a YouTube link or search text!");
@@ -62,7 +62,6 @@ client.on("messageCreate", async (message) => {
 
     let songInfo;
 
-    // If link
     if (play.yt_validate(query) === "video") {
       songInfo = await play.video_info(query);
     } else {
@@ -137,9 +136,8 @@ client.on("messageCreate", async (message) => {
   // 📜 QUEUE
   if (message.content === "!queue") {
     const queue = client.queue.get(message.guild.id);
-    if (!queue || !queue.songs.length) {
+    if (!queue || !queue.songs.length)
       return message.reply("❌ Queue is empty!");
-    }
 
     const list = queue.songs
       .map((s, i) => `${i + 1}. ${s.title}`)
@@ -149,4 +147,4 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-client.login( MTUxNjc1NDM4NTY1MTM3MjA1Mg.GeM3Fj.ZTdOzwdLBaJYpqwBxBhJtWmmLC4hFDaZdInIUM);
+client.login(process.env.TOKEN);
